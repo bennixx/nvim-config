@@ -418,27 +418,31 @@ require('lazy').setup({
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    config = function(_, opts)
-      require('nvim-treesitter.config').setup(opts)
+    config = function()
+      require('nvim-treesitter').setup {
+        ensure_installed = {
+          'bash',
+          'c',
+          'diff',
+          'html',
+          'lua',
+          'luadoc',
+          'markdown',
+          'markdown_inline',
+          'query',
+          'vim',
+          'vimdoc',
+        },
+        auto_install = true,
+      }
+
+      -- Highlights
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
     end,
-    options = {
-      ensure_installed = {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'vim',
-        'vimdoc',
-      },
-      auto_install = true,
-      highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
   },
 
   -- Kickstart extras (kept as-is)
